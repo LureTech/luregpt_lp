@@ -1,14 +1,17 @@
 import { lerOrigem } from "./tracking.js";
 
 /**
- * Destino do lead — briefing 10, PENDENTE (P6):
- * "Aviso imediato no WhatsApp do comercial + registro em base consultável."
+ * Destino do lead: webhook do n8n.
  *
- * Ponha aqui a URL que recebe o lead (n8n, Supabase Edge Function, o que for).
- * Enquanto estiver vazia, o formulário funciona e só não entrega em lugar nenhum —
- * o console avisa. Não subir a página assim.
+ * Fica escrito aqui como padrão porque a URL acaba no JavaScript público da
+ * página de qualquer jeito (variáveis VITE_ são embutidas no build) — não é
+ * segredo. A variável VITE_ENDPOINT_LEAD, se existir na hospedagem, substitui.
+ * Antes dependia só dela, e o deploy na Vercel subiu sem: o formulário
+ * mostrava "Recebido!" e o lead não ia para lugar nenhum.
  */
-const ENDPOINT_LEAD = import.meta.env.VITE_ENDPOINT_LEAD || "";
+const ENDPOINT_PADRAO =
+  "https://webhook.deverascompany.com.br/webhook/55c39762-14a0-4af9-a861-c90903a83a63";
+const ENDPOINT_LEAD = import.meta.env.VITE_ENDPOINT_LEAD || ENDPOINT_PADRAO;
 
 export async function enviarLead(dados) {
   // UTMs (utm_source, utm_campaign…) viram campos soltos, para o n8n ler direto
@@ -20,13 +23,9 @@ export async function enviarLead(dados) {
     enviadoEm: new Date().toISOString(),
   };
 
-  if (!ENDPOINT_LEAD) {
-    console.warn(
-      "[Lure GPT LP] VITE_ENDPOINT_LEAD não configurado (P6). Lead não foi entregue:",
-      carga
-    );
-    return { ok: true, simulado: true };
-  }
+  // sem destino, falha de verdade: melhor a pessoa ver erro do que um
+  // "Recebido!" falso com o lead perdido
+  if (!ENDPOINT_LEAD) throw new Error("Destino do lead não configurado");
 
   // O webhook do n8n está configurado como GET: os campos vão na query
   // string e o n8n lê cada um em `query`. Em modo no-cors porque o webhook
