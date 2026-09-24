@@ -1,0 +1,87 @@
+/* ==========================================================================
+   Tokens — réplica da ElevateLP com o rosa trocado por azul.
+   Valores medidos na página original (ElevateLP (1).html).
+
+   original            →  aqui
+   #0C0C0C fundo       →  #0A0C12  (mesmo preto, com um fio de azul)
+   #0D0D0D superfície  →  #0D1017
+   #C71A3A escuro      →  #1B3E8F
+   #F93D60 primário    →  #3D7BF9
+   #FF8AA0 claro       →  #8AB4FF
+   #B9B9B9 texto 2     →  mantido
+   #929292 texto 3     →  mantido
+   ========================================================================== */
+
+:root {
+  /* --- base --- */
+  --preto: #0a0c12;
+  --superficie: #0d1017;
+  --superficie-2: #121722;
+  --linha: #2f2f2f;
+  --linha-clara: #3f3f3f;
+
+  /* --- acento azul (era rosa) --- */
+  --azul-escuro: #1b3e8f;
+  --azul: #3d7bf9;
+  --azul-claro: #8ab4ff;
+  --azul-brilho: #1e5bff;
+
+  /* --- texto --- */
+  --branco: #ffffff;
+  --cinza: #b9b9b9;
+  --cinza-fraco: #929292;
+  --cinza-apagado: #5e5e5e;
+
+  /* --- tipografia (medida no original) --- */
+  --display: "Rethink Sans", "Poppins", system-ui, sans-serif;
+  --corpo: "Inter", "Rethink Sans", system-ui, -apple-system, sans-serif;
+
+  /* --- métrica --- */
+  --largura: 1200px;
+  --gutter: 20px;
+
+  /* --- gradiente do preço (era rosa) --- */
+  --grad-preco: linear-gradient(
+    90deg,
+    #1b3e8f 0%,
+    #2f6bff 22%,
+    #6ea0ff 40%,
+    #dce8ff 50%,
+    #6ea0ff 60%,
+    #2f6bff 78%,
+    #1b3e8f 100%
+  );
+
+  /* --- botão shiny (portado) --- */
+  --shiny-cta-bg: #0a0c12;
+  --shiny-cta-bg-subtle: #181c26;
+  --shiny-cta-fg: #ffffff;
+  --shiny-cta-highlight: #2f6bff;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 40px;
+  }
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --gradient-percent {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 5%;
+}
+@property --gradient-shine {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #ffffff;
+}

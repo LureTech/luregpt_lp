@@ -1,0 +1,634 @@
+/* ==========================================================================
+   Mini-interfaces dentro dos cards.
+   Substituem as capturas de tela da referência até as telas reais existirem.
+   ========================================================================== */
+
+.mock {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 22px;
+  font-size: 0.78rem;
+  color: var(--cinza);
+  text-align: left;
+}
+.mock--centro {
+  align-items: center;
+  justify-content: center;
+}
+.mock--trio {
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ---------- peças comuns ---------- */
+.mock__cartao {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.045);
+  padding: 12px 14px;
+  backdrop-filter: blur(4px);
+}
+.mock__cartao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.mock__nome {
+  font-size: 0.78rem;
+  color: var(--branco);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mock__kv {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  padding-top: 5px;
+  color: var(--cinza-fraco);
+}
+.mock__kv b {
+  color: var(--branco);
+  font-weight: 500;
+}
+.mock__tag {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--cinza);
+}
+.mock__tag--pausada {
+  background: rgb(255 176 32 / 0.16);
+  color: #ffc766;
+}
+.mock__tag--ok {
+  background: rgb(61 123 249 / 0.2);
+  color: var(--azul-claro);
+}
+.mock__rodape-mock {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+/* ---------- áudio ---------- */
+.mock__bolha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: 999px 999px 999px 5px;
+  background: linear-gradient(120deg, var(--azul-escuro), rgb(61 123 249 / 0.35));
+  border: 1px solid rgb(138 180 255 / 0.28);
+}
+.mock__onda {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 22px;
+  flex: 1;
+}
+.mock__onda i {
+  width: 2px;
+  border-radius: 2px;
+  background: var(--azul-claro);
+  animation: mock-onda 1.2s ease-in-out infinite;
+}
+@keyframes mock-onda {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.mock__tempo {
+  font-size: 0.68rem;
+  color: var(--azul-claro);
+}
+.mock__linha-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--cinza-fraco);
+  padding-left: 4px;
+}
+.mock__pulso {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--azul);
+  animation: mock-pulso 1.4s ease-in-out infinite;
+}
+@keyframes mock-pulso {
+  0%,
+  100% {
+    opacity: 0.3;
+    box-shadow: 0 0 0 0 rgb(61 123 249 / 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 0 5px rgb(61 123 249 / 0);
+  }
+}
+
+/* ---------- clonagem ---------- */
+.mock__barra-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+.mock__pontos {
+  display: flex;
+  gap: 4px;
+}
+.mock__pontos i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.22);
+}
+.mock__url {
+  font-size: 0.68rem;
+  color: var(--cinza-fraco);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mock__antes-depois {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mock__pagina {
+  flex: 1;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.03);
+}
+.mock__pagina--nova {
+  border-color: rgb(61 123 249 / 0.45);
+  background: rgb(61 123 249 / 0.08);
+  box-shadow: 0 0 22px -6px rgb(61 123 249 / 0.6);
+}
+.mock__pagina-tarja {
+  height: 16px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.14);
+}
+.mock__pagina--nova .mock__pagina-tarja {
+  background: rgb(138 180 255 / 0.4);
+}
+.mock__pagina-linha {
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.1);
+}
+.mock__pagina-linha.curta {
+  width: 62%;
+}
+.mock__pagina-btn {
+  height: 8px;
+  width: 46%;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.16);
+}
+.mock__pagina--nova .mock__pagina-btn {
+  background: var(--azul);
+}
+.mock__pagina figcaption {
+  font-size: 0.6rem;
+  color: var(--cinza-apagado);
+  letter-spacing: 0.04em;
+}
+.mock__pagina--nova figcaption {
+  color: var(--azul-claro);
+}
+.mock__flecha {
+  color: var(--azul);
+  font-size: 0.9rem;
+}
+.mock__cronometro {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgb(61 123 249 / 0.35);
+  font-size: 0.68rem;
+  color: var(--azul-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- agenda ---------- */
+.mock__semana,
+.mock__calendario {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+.mock__semana span {
+  text-align: center;
+  font-size: 0.58rem;
+  color: var(--cinza-apagado);
+}
+.mock__dia {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.035);
+  display: grid;
+  place-content: center;
+}
+.mock__dia i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  display: block;
+}
+.mock__dia.cor-a i {
+  background: #3d7bf9;
+}
+.mock__dia.cor-b i {
+  background: #8ab4ff;
+}
+.mock__dia.cor-c i {
+  background: #1b4ed8;
+}
+.mock__dia.cor-d i {
+  background: #5ad1ff;
+}
+
+/* ---------- vídeo ---------- */
+.mock__pedido {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.05);
+  border-left: 2px solid var(--azul);
+  font-size: 0.72rem;
+  color: var(--branco);
+}
+.mock__trilha {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  height: 34px;
+  padding: 5px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.04);
+  border: 1px solid rgb(255 255 255 / 0.07);
+}
+.mock__clipe {
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgb(61 123 249 / 0.55), rgb(27 62 143 / 0.5));
+}
+.mock__corte {
+  width: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(255 255 255 / 0.18) 0 2px,
+    transparent 2px 4px
+  );
+}
+.mock__cursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 38%;
+  width: 1px;
+  background: var(--azul-claro);
+  box-shadow: 0 0 8px var(--azul);
+}
+.mock__legenda {
+  align-self: center;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 0.65);
+  font-size: 0.72rem;
+  color: #fff;
+}
+.mock__legenda b {
+  color: var(--azul-claro);
+  font-weight: 500;
+}
+
+/* ---------- CRM ---------- */
+.mock__msg {
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  max-width: 92%;
+}
+.mock__msg--voce {
+  align-self: flex-end;
+  border-radius: 12px 12px 4px 12px;
+  background: rgb(61 123 249 / 0.22);
+  border: 1px solid rgb(61 123 249 / 0.35);
+  color: var(--branco);
+}
+.mock__msg--sistema {
+  align-self: flex-start;
+  border-radius: 12px 12px 12px 4px;
+  background: rgb(255 255 255 / 0.05);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+.mock__msg--sistema b {
+  color: var(--azul-claro);
+  font-weight: 500;
+}
+.mock__mini-lista {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+.mock__mini-lista i {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: rgb(138 180 255 / 0.35);
+}
+.mock__aviso-escrita {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.64rem;
+  color: var(--cinza-apagado);
+}
+.mock__cadeado {
+  font-size: 0.7rem;
+}
+
+/* ---------- aplicativo ---------- */
+.mock__celular {
+  position: relative;
+  width: 148px;
+  padding: 18px 10px 14px;
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: linear-gradient(180deg, #10182a, #080b12);
+  display: grid;
+  gap: 7px;
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.9);
+}
+.mock__notch {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 4px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.16);
+}
+.mock__hora {
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.mock__notificacao {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.08);
+  font-size: 0.58rem;
+  line-height: 1.35;
+  color: var(--cinza);
+}
+.mock__notificacao--fraca {
+  opacity: 0.5;
+}
+.mock__notificacao b {
+  color: #fff;
+  font-weight: 500;
+}
+.mock__app-icone {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-content: center;
+  border-radius: 5px;
+  background: var(--azul);
+  color: #fff;
+  font-size: 0.6rem;
+  font-family: var(--display);
+}
+
+/* ---------- trio do ciclo ---------- */
+.mock__pilha {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: linear-gradient(120deg, rgb(61 123 249 / 0.16), rgb(255 255 255 / 0.03));
+  backdrop-filter: blur(3px);
+}
+.mock__pilha-rot {
+  display: block;
+  font-family: var(--display);
+  font-size: 0.94rem;
+  color: var(--branco);
+}
+.mock__pilha-desc {
+  display: block;
+  font-size: 0.66rem;
+  color: var(--cinza-fraco);
+  margin-top: 2px;
+}
+.mock__mic {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  background: rgb(61 123 249 / 0.16);
+  border: 1px solid rgb(61 123 249 / 0.45);
+  color: var(--azul-claro);
+}
+.mock__mic-anel {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgb(61 123 249 / 0.5);
+  animation: mock-anel 2.4s ease-out infinite;
+}
+.mock__mic-anel.dois {
+  animation-delay: 1.2s;
+}
+@keyframes mock-anel {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+.mock__lead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.045);
+  border: 1px solid rgb(255 255 255 / 0.07);
+}
+.mock__avatar {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  background: rgb(61 123 249 / 0.3);
+  color: var(--azul-claro);
+  font-size: 0.62rem;
+}
+.mock__lead-nome {
+  flex: 1;
+  font-size: 0.72rem;
+  color: var(--cinza);
+}
+.mock__ponto-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.2);
+}
+.mock__ponto-status.novo {
+  background: var(--azul);
+  box-shadow: 0 0 8px var(--azul);
+}
+
+/* ==========================================================================
+   Profundidade: as mini-interfaces flutuam como painel de produto, nao coladas
+   no fundo do card. O pai da perspectiva e o palco.
+   ========================================================================== */
+.cartao__palco,
+.trio-item__palco {
+  perspective: 900px;
+  perspective-origin: 50% 30%;
+}
+.mock {
+  transform: rotateX(9deg) scale(0.97);
+  transform-origin: 50% 40%;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cartao:hover .mock,
+.trio-item:hover .mock {
+  transform: rotateX(2deg) scale(1);
+}
+/* cada peca ganha sombra propria: e isso que separa do fundo */
+.mock__bolha,
+.mock__cartao,
+.mock__barra-nav,
+.mock__pagina,
+.mock__trilha,
+.mock__pedido,
+.mock__msg,
+.mock__pilha,
+.mock__lead,
+.mock__celular,
+.mock__dia,
+.mock__legenda {
+  box-shadow: 0 10px 26px -14px rgb(0 0 0 / 0.95);
+}
+
+/* o palco cresce um pouco: as telas estavam espremidas */
+.cartao__palco {
+  height: clamp(212px, 24vw, 262px);
+}
+
+/* calendario mais cheio — a densidade e o argumento do pilar */
+.mock__dia.cor-a,
+.mock__dia.cor-b,
+.mock__dia.cor-c,
+.mock__dia.cor-d {
+  background: rgb(255 255 255 / 0.07);
+}
+.mock__dia i {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  opacity: 0.9;
+}
+.mock__dia.cor-a i {
+  background: linear-gradient(160deg, #5a93ff, #1b3e8f);
+}
+.mock__dia.cor-b i {
+  background: linear-gradient(160deg, #a9c8ff, #3d7bf9);
+}
+.mock__dia.cor-c i {
+  background: linear-gradient(160deg, #3d7bf9, #10245c);
+}
+.mock__dia.cor-d i {
+  background: linear-gradient(160deg, #7de3ff, #1d7fa8);
+}
+
+/* ---------- celular no mobile: o palco e estreito ---------- */
+@media (max-width: 520px) {
+  .mock {
+    padding: 16px;
+    transform: rotateX(6deg) scale(0.99);
+  }
+  .mock__celular {
+    width: 132px;
+  }
+  .mock__pilha {
+    padding: 8px 12px;
+  }
+}
+
+/* ---------- pilar 6 · celular subindo do pé do palco ---------- */
+.mock--app {
+  padding: 0;
+  overflow: hidden;
+  display: block;
+}
+.mock-app__celular {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  width: min(62%, 230px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.55)) drop-shadow(0 0 30px rgb(61 123 249 / 0.18));
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cartao:hover .mock-app__celular {
+  transform: translateX(-50%) translateY(-10px);
+}
+/* o pé do celular some no fundo do palco em vez de ser cortado seco */
+.mock--app::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background: linear-gradient(transparent, #0b0f18);
+  pointer-events: none;
+}

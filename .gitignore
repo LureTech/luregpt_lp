@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.local
+
+# Originais pesados que a página não usa (ela usa os .webp). Ficam só no disco.
+public/mock-*.png
+public/hero-*.png
+public/notebook-poster.png
+public/notebook.mp4
