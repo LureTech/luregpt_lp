@@ -444,3 +444,52 @@ h1 {
 [data-fora] *::after {
   animation-play-state: paused !important;
 }
+
+/* ==========================================================================
+   Faixa intermediária (761–1023px) — é onde o site cai com zoom no
+   navegador (1440px a 150% = 960px). O hero já é uma coluna só, então tudo
+   vai para o eixo do meio, como no celular.
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .hero__texto-col {
+    text-align: center;
+  }
+  .hero h1,
+  .hero .sub,
+  .hero__reforco {
+    margin-inline: auto;
+  }
+  .hero .sub,
+  .hero__reforco {
+    max-width: 58ch;
+  }
+  .hero__acoes {
+    justify-content: center;
+  }
+  /* o palco fica mais estreito e centrado, para os cartões não vazarem */
+  .hero__video-col {
+    max-width: 680px;
+    margin: clamp(28px, 5vw, 48px) auto 0;
+  }
+}
+
+/* plano: enquanto a grade é uma coluna só, marca e vantagens centradas */
+@media (max-width: 979px) {
+  .preco-grade > div:first-child {
+    text-align: center;
+  }
+  .preco-desc {
+    margin-inline: auto;
+  }
+  .preco-grade .plano,
+  .preco-grade .vantagens {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+}
+
+/* as linhas neon não podem abrir rolagem lateral em tela estreita */
+#base {
+  overflow-x: clip;
+}
