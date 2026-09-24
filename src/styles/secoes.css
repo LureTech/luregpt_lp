@@ -2541,3 +2541,13 @@
 .rodape .parceiro-meta {
   margin: 18px 10px 0 0;
 }
+
+/* celular bem estreito (≤380px): as três métricas do painel não cabem lado a lado */
+@media (max-width: 380px) {
+  .cofre__metricas {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cofre__metricas > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
