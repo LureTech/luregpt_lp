@@ -1,14 +1,15 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Camada de animação da página.
  *
- * Lenis faz a rolagem suave (a referência usava Lenis — o HTML original tem
- * class="lenis" no <html>), e o GSAP anima cada seção conforme ela entra.
+ * Lenis faz a rolagem suave com inércia e o GSAP anima cada seção conforme
+ * ela entra.
  *
  * Tudo é montado por `iniciarAnimacoes()` e desmontado pelo que ela devolve.
  * Quem pediu menos movimento não recebe nada disso: a página aparece pronta.
@@ -103,6 +104,12 @@ const TEMPO = new Set([
   "onUpdate",
 ]);
 function entrar(alvos, opcoes) {
+  // seção que não está na página (ex.: depoimento, ainda pendente): não
+  // anima e não enche o console de "target not found"
+  if (!gsap.utils.toArray(alvos).length) return null;
+  const gatilho = opcoes.scrollTrigger?.trigger;
+  if (typeof gatilho === "string" && !document.querySelector(gatilho)) return null;
+
   const de = {};
   const para = { immediateRender: true };
   for (const [chave, valor] of Object.entries(opcoes)) {
@@ -127,41 +134,47 @@ export function iniciarAnimacoes() {
     return () => {};
   }
 
-  document.documentElement.classList.add("lenis");
-
-  /* ---------------- rolagem suave ---------------- */
-  const lenis = new Lenis({
-    duration: 1.05,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true,
-    // no celular a rolagem nativa é melhor: mais leve e não briga com o toque
-    smoothTouch: false,
-  });
-
+  /* ---------------- rolagem suave (Lenis) ----------------
+     Lenis e não ScrollSmoother: o Lenis rola a janela de verdade, então
+     window.scrollY continua valendo para quem lê (o topo que encolhe, o
+     ScrollTrigger). Defaults do Lenis, sem calibrar. Teclado, busca do
+     navegador e âncoras seguem nativos; o Lenis só acompanha. */
+  const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
   const aoTick = (tempo) => lenis.raf(tempo * 1000);
   gsap.ticker.add(aoTick);
   gsap.ticker.lagSmoothing(0);
 
-  // links de âncora passam a usar o Lenis, senão o scroll-behavior briga com ele
+  // âncoras rolam pelo Lenis; o desconto do topo fixo vem do
+  // scroll-margin-top do CSS, que o Lenis respeita como o navegador
+  function rolarAte(alvo, imediato = false) {
+    lenis.scrollTo(alvo, { immediate: imediato });
+  }
+
   function aoClicarAncora(e) {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    const alvo = document.querySelector(a.getAttribute("href"));
+    const href = a.getAttribute("href");
+    if (href === "#") return;
+    const alvo = document.querySelector(href);
     if (!alvo) return;
     e.preventDefault();
-    lenis.scrollTo(alvo, { offset: -80 });
+    rolarAte(alvo);
   }
   document.addEventListener("click", aoClicarAncora);
 
-  // Abrir a pagina ja com #ancora: o Lenis assume a rolagem e zera a posicao,
-  // entao quem recebe o link lp.luregpt.com.br/#plano cairia no topo.
-  if (window.location.hash) {
+  if (window.location.hash && window.location.hash !== "#fechamento") {
     const alvo = document.querySelector(window.location.hash);
-    if (alvo) {
-      requestAnimationFrame(() => lenis.scrollTo(alvo, { offset: -80, immediate: true }));
-    }
+    if (alvo) requestAnimationFrame(() => rolarAte(alvo, true));
   }
+
+  // popup do formulário aberto: o fundo não rola
+  const html = document.documentElement;
+  const vigiaModal = new MutationObserver(() => {
+    if (html.classList.contains("modal-aberto")) lenis.stop();
+    else lenis.start();
+  });
+  vigiaModal.observe(html, { attributes: true, attributeFilter: ["class"] });
 
   const ctx = gsap.context(() => {
     /* ---------------- títulos: palavra a palavra ---------------- */
@@ -423,7 +436,7 @@ export function iniciarAnimacoes() {
       scrollTrigger: { trigger: ".plano", start: "top 70%", once: true },
     });
 
-    /* ---------------- FAQ e fechamento ---------------- */
+    /* ---------------- FAQ ---------------- */
     entrar(".faq__item", {
       y: 26,
       opacity: 0,
@@ -432,23 +445,6 @@ export function iniciarAnimacoes() {
       ease: "power2.out",
       scrollTrigger: { trigger: ".faq", start: "top 86%", once: true },
     });
-    entrar(".form", {
-      y: 60,
-      rotateX: -12,
-      opacity: 0,
-      duration: 1,
-      ease: "power3.out",
-      scrollTrigger: { trigger: ".fechamento", start: "top 78%", once: true },
-    });
-    entrar(".lista-seca li", {
-      x: -22,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: "power2.out",
-      scrollTrigger: { trigger: ".lista-seca", start: "top 88%", once: true },
-    });
-
     /* ---------------- movimento contínuo e entradas extras ---------------- */
     // subtítulos e selos de cada seção sobem logo depois do título
     gsap.utils.toArray(".secao .sub, .secao .selo, .seguranca__selo").forEach((el) => {
@@ -550,17 +546,6 @@ export function iniciarAnimacoes() {
       scrollTrigger: { trigger: ".plano", start: "top 75%", once: true },
     });
 
-    // fechamento: os campos do formulário entram um por um
-    entrar(".form .form__campo, .form .form__dupla, .form .form__consent, .form .form__enviar", {
-      y: 16,
-      opacity: 0,
-      duration: 0.5,
-      stagger: 0.08,
-      delay: 0.4,
-      ease: "power2.out",
-      scrollTrigger: { trigger: ".fechamento", start: "top 70%", once: true },
-    });
-
     // rodapé: colunas subindo
     entrar(".rodape__grade > *", {
       y: 24,
@@ -606,8 +591,11 @@ export function iniciarAnimacoes() {
       ScrollTrigger.create({
         onUpdate: (self) => {
           const alvo = 1 + Math.min(Math.abs(self.getVelocity()) / 1600, 3);
+          const antes = atual;
           atual += (alvo - atual) * 0.12;
-          trilho.style.animationDuration = `${42 / atual}s`;
+          // só reescreve quando muda de verdade: cada escrita recalcula o estilo
+          if (Math.abs(atual - antes) < 0.02) return;
+          trilho.style.animationDuration = `${(42 / atual).toFixed(1)}s`;
         },
       });
     }
@@ -671,7 +659,9 @@ export function iniciarAnimacoes() {
     });
   }
 
-  window.addEventListener("scroll", rede, { passive: true });
+  // Sem ouvir o scroll: a varredura mede e lê o estilo de dezenas de
+  // elementos (layout forçado) e, presa a cada quadro de rolagem, travava a
+  // página. Como a tolerância já é de 2,6s, o relógio basta.
   window.addEventListener("resize", rede);
   ScrollTrigger.addEventListener("refresh", rede);
   const relogioRede = setInterval(rede, 2500);
@@ -710,15 +700,14 @@ export function iniciarAnimacoes() {
     ctx.revert();
     clearInterval(relogioRede);
     if (varredura) cancelAnimationFrame(varredura);
-    window.removeEventListener("scroll", rede);
     window.removeEventListener("resize", rede);
     window.removeEventListener("load", remedir);
     ScrollTrigger.removeEventListener("refresh", rede);
     document.removeEventListener("click", aoClicarAncora);
+    vigiaModal.disconnect();
     gsap.ticker.remove(aoTick);
     lenis.destroy();
     ScrollTrigger.getAll().forEach((t) => t.kill());
-    document.documentElement.classList.remove("lenis");
   };
 }
 

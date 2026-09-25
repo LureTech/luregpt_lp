@@ -7,9 +7,10 @@ import Ciclo from "./components/Ciclo.jsx";
 import Pilares from "./components/Pilares.jsx";
 import { Seguranca, Apoio, ParaQuem } from "./components/Seguranca.jsx";
 import Plano from "./components/Plano.jsx";
+import Faq from "./components/Faq.jsx";
 
-import Fechamento from "./components/Fechamento.jsx";
 import Rodape from "./components/Rodape.jsx";
+import ModalLead from "./components/ModalLead.jsx";
 import { useEffect } from "react";
 import { iniciarAnimacoes, ligarTilt, ligarFoco } from "./lib/animacoes.js";
 
@@ -60,11 +61,12 @@ export default function App() {
         <Apoio />
         <ParaQuem />
         <Plano />
-
-        <Fechamento />
+        <Faq />
       </main>
 
       <Rodape />
+
+      <ModalLead />
     </>
   );
 }

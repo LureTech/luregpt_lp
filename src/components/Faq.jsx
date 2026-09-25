@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Chevron } from "./Icones.jsx";
+import { Chevron, Seta } from "./Icones.jsx";
 import { FAQ } from "../data/conteudo.js";
 
-/** Perguntas frequentes — duas colunas de acordeão, como na referência. */
+/**
+ * Perguntas frequentes — duas colunas de acordeão, como na referência.
+ * Fecha a página em fundo claro: depois do preço vêm as objeções, e o último
+ * botão abre o popup do formulário.
+ */
 export default function Faq() {
-  const [aberta, setAberta] = useState(3);
+  const [aberta, setAberta] = useState(0);
 
   return (
-    <section className="secao centro" id="faq">
+    <section className="secao centro secao--clara faq-final" id="faq">
       <div className="wrap">
         <p className="selo">faq</p>
         <h2 style={{ marginTop: 18 }}>Perguntas frequentes</h2>
@@ -40,6 +44,17 @@ export default function Faq() {
               </div>
             );
           })}
+        </div>
+
+        <div className="faq__cta">
+          <div>
+            <strong>Ficou alguma dúvida?</strong>
+            <p>Deixe seu WhatsApp e o comercial responde em menos de 5 minutos.</p>
+          </div>
+          <a className="btn-cheio" href="#fechamento">
+            Quero o Lure GPT
+            <Seta />
+          </a>
         </div>
       </div>
     </section>

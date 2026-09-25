@@ -9,8 +9,9 @@
 * {
   margin: 0;
 }
+/* sem scroll-behavior: smooth — o ScrollTrigger mede rolando a página e o
+   smooth atrapalha; os links de âncora rolam suave pelo JS (animacoes.js) */
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 body {
@@ -388,7 +389,6 @@ h3 {
 }
 .palavra > span {
   display: inline-block;
-  will-change: transform;
 }
 
 /* profundidade: sem perspectiva no pai, rotateX/rotateY nao aparecem */
@@ -410,16 +410,5 @@ h3 {
 .form,
 .honesta {
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
-/* Lenis assume a rolagem: o scroll-behavior nativo briga com ele */
-html.lenis {
-  scroll-behavior: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}

@@ -2441,11 +2441,13 @@
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, #fbbf24, #f87171);
+  transform-origin: left;
   animation: saldo-esvazia 4s ease-in-out infinite;
 }
+/* escala em vez de largura: largura animada recalcula o layout a cada quadro */
 @keyframes saldo-esvazia {
-  0% { width: 70%; }
-  80%, 100% { width: 8%; }
+  0% { transform: scaleX(0.7); }
+  80%, 100% { transform: scaleX(0.08); }
 }
 
 /* presença: as barras disputam e o seu cliente ganha */
@@ -2549,5 +2551,123 @@
   }
   .cofre__metricas > div:last-child {
     grid-column: 1 / -1;
+  }
+}
+
+/* ==========================================================================
+   Popup do formulário — aberto pelos botões "Quero o Lure GPT"
+   ========================================================================== */
+html.modal-aberto,
+html.modal-aberto body {
+  overflow: hidden;
+}
+.modal-lead {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgb(4 7 13 / 0.72);
+  animation: modal-fundo 0.25s ease-out;
+}
+.modal-lead__caixa {
+  width: 100%;
+  max-width: 560px;
+  animation: modal-entra 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+/* mesmos tokens do formulário do fechamento, para ficar idêntico */
+.modal-lead .form {
+  --cinza-apagado: #6b7280;
+  --azul-claro: #8ab4ff;
+  color-scheme: dark;
+  color: var(--cinza);
+  box-shadow:
+    0 40px 90px -30px rgb(0 0 0 / 0.8),
+    0 0 0 1px rgb(61 123 249 / 0.16);
+}
+.form__fechar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--linha);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.04);
+  color: var(--cinza);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.form__fechar:hover {
+  color: var(--branco);
+  border-color: var(--azul);
+}
+.modal-lead .form h3 {
+  padding-right: 40px;
+}
+@keyframes modal-fundo {
+  from { opacity: 0; }
+}
+@keyframes modal-entra {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-lead,
+  .modal-lead__caixa {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   FAQ no fim da página, em fundo claro
+   ========================================================================== */
+.secao--clara .faq__item {
+  background: #fff;
+  border-color: var(--linha);
+  box-shadow: 0 14px 36px -26px rgb(11 18 32 / 0.3);
+}
+.secao--clara .faq__item[data-aberto="true"] {
+  background: linear-gradient(180deg, #ffffff, #f3f7ff);
+  border-color: rgb(61 123 249 / 0.35);
+}
+.faq__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 28px;
+  margin-top: clamp(28px, 4vw, 44px);
+  padding: clamp(22px, 3vw, 30px) clamp(22px, 3vw, 34px);
+  border: 1px solid rgb(61 123 249 / 0.25);
+  border-radius: 20px;
+  background: linear-gradient(120deg, #ffffff, #eef4ff);
+  box-shadow: 0 24px 60px -34px rgb(61 123 249 / 0.55);
+  text-align: left;
+}
+.faq__cta strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--branco);
+}
+.faq__cta p {
+  margin-top: 4px;
+  font-size: 0.93rem;
+  color: var(--cinza-fraco);
+}
+.faq__cta .btn-cheio {
+  gap: 10px;
+}
+@media (max-width: 560px) {
+  .faq__cta .btn-cheio {
+    width: 100%;
+    justify-content: center;
   }
 }
