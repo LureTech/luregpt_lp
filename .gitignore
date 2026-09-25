@@ -8,3 +8,5 @@ public/mock-*.png
 public/hero-*.png
 public/notebook-poster.png
 public/notebook.mp4
+
+.vercel
