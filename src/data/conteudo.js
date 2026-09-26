@@ -285,21 +285,51 @@ export const FAQ = [
   },
 ];
 
-/* ---------- 11 · fechamento ---------- */
+/* ---------- 11 · formulário (popup, uma pergunta por vez) ---------- */
 export const FECHAMENTO = {
-  titulo: [{ t: "Manda um " }, { t: "áudio", realce: true }, { t: ". A campanha sobe." }],
-  sub: "Deixe seus dados e o comercial chama no WhatsApp para colocar o Lure GPT para rodar na sua agência.",
-  bullets: [
-    "Os seis pilares liberados desde o primeiro dia.",
-    "Migração da carteira e das contas de anúncio, sem parar a operação.",
-    "Treinamento do time e acompanhamento na primeira semana.",
-  ],
   form: {
-    titulo: "Quero o Lure GPT na minha agência",
-    subtitulo: "Seis campos rápidos. O comercial responde em menos de 5 minutos.",
+    titulo: [
+      { t: "Você está a 3 passos de colocar " },
+      { t: "o Lure GPT", realce: true },
+      { t: " na sua agência" },
+    ],
+    subtitulo: "Responda e o comercial chama no seu WhatsApp em menos de 5 minutos.",
+    passos: [
+      {
+        campo: "cargo",
+        pergunta: "Qual o seu cargo dentro da agência?",
+        ajuda: "Pra personalizar a conversa: falamos diferente com o CEO do que com o gestor de tráfego.",
+        opcoes: [
+          { valor: "diretor", rotulo: "Diretor" },
+          { valor: "ceo", rotulo: "CEO" },
+          { valor: "gestor-trafego", rotulo: "Gestor de tráfego" },
+          { valor: "coordenador", rotulo: "Coordenador" },
+        ],
+      },
+      {
+        campo: "faturamento",
+        pergunta: "Qual o faturamento da agência?",
+        ajuda: "Pra indicar o plano certo para o tamanho da sua operação.",
+        opcoes: [
+          { valor: "0-20k", rotulo: "0 a 20.000/mês" },
+          { valor: "20-40k", rotulo: "20.000 a 40.000/mês" },
+          { valor: "40-60k", rotulo: "40.000 a 60.000/mês" },
+          { valor: "60-100k", rotulo: "60.000 a 100.000/mês" },
+          { valor: "100-150k", rotulo: "100.000 a 150.000/mês" },
+          { valor: "150-200k", rotulo: "150.000 a 200.000/mês" },
+          { valor: "200k+", rotulo: "Acima de 200.000/mês" },
+        ],
+      },
+    ],
+    contato: {
+      pergunta: "Seus dados para contato",
+      ajuda: "É por aqui que o comercial vai falar com você.",
+    },
     botao: "Quero o Lure GPT",
-    consentimento: "Autorizo o contato da Lure Digital por WhatsApp e e-mail e concordo com a",
+    voltar: "Voltar",
+    consentimento: "Ao enviar, você autoriza o contato da Lure Digital por WhatsApp e concorda com a",
     politica: "política de privacidade",
+    seguro: "Seus dados estão seguros e serão usados apenas para contato.",
     sucesso: {
       titulo: "Recebido! O comercial já vai te chamar.",
       texto: "Ele chama no seu WhatsApp em até 5 minutos para liberar o acesso da sua agência.",

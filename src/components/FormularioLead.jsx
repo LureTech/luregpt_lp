@@ -1,48 +1,100 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Seta } from "./Icones.jsx";
 import { FECHAMENTO } from "../data/conteudo.js";
 import { enviarLead, mascararWhatsapp } from "../lib/lead.js";
 import { marcarConversao } from "../lib/tracking.js";
 
+const F = FECHAMENTO.form;
+const TOTAL = F.passos.length + 1; // perguntas de escolha + a tela de contato
+
 const VAZIO = {
+  cargo: "",
+  faturamento: "",
   nome: "",
   whatsapp: "",
-  email: "",
-  pessoas: "",
-  cargo: "",
-  ferramenta: "",
-  consentimento: false,
+  instagram: "",
 };
 
+/** Aceita "@agencia", "agencia" ou o link do perfil; devolve "@agencia". */
+function limparInstagram(valor) {
+  const usuario = valor
+    .trim()
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/[/?#].*$/, "")
+    .replace(/^@+/, "");
+  return usuario ? `@${usuario}` : "";
+}
+
 /**
- * Formulário do lead, mostrado no popup que os botões "Quero o Lure GPT"
- * abrem. Os ids dos campos levam um prefixo único para o <label htmlFor>
- * não colidir se o formulário aparecer em mais de um lugar.
+ * Formulário do lead em passos, uma pergunta por vez — o mesmo formato do
+ * assessorialure.com. Cargo e faturamento são cartões que avançam sozinhos no
+ * clique; nome, WhatsApp e Instagram ficam juntos na última tela.
  */
 export default function FormularioLead({ idTitulo, fechar }) {
   const base = useId();
   const id = (campo) => `${base}-${campo}`;
+  const [passo, setPasso] = useState(0);
   const [dados, setDados] = useState(VAZIO);
   const [estado, setEstado] = useState("parado");
   const [erro, setErro] = useState("");
+  const miolo = useRef(null);
+  const avanco = useRef(0);
+
+  useEffect(() => () => clearTimeout(avanco.current), []);
+
+  // a cada passo, o foco vai para o primeiro campo — teclado e leitor de tela
+  // acompanham a troca sem a pessoa precisar caçar onde está
+  const primeiraVez = useRef(true);
+  useEffect(() => {
+    if (primeiraVez.current) {
+      primeiraVez.current = false;
+      return;
+    }
+    const alvo =
+      miolo.current?.querySelector("input:checked") || miolo.current?.querySelector("input");
+    alvo?.focus({ preventScroll: true });
+  }, [passo]);
 
   function mudar(campo, valor) {
     setDados((atual) => ({ ...atual, [campo]: valor }));
+    setErro(""); // o aviso some assim que a pessoa corrige
+  }
+
+  function escolher(campo, valor) {
+    mudar(campo, valor);
+    // uma pausa curta para a pessoa ver a marcação antes de trocar de tela
+    clearTimeout(avanco.current);
+    avanco.current = setTimeout(() => setPasso((p) => Math.min(p + 1, TOTAL - 1)), 260);
+  }
+
+  function voltar() {
+    clearTimeout(avanco.current);
+    setErro("");
+    setPasso((p) => Math.max(p - 1, 0));
   }
 
   async function aoEnviar(e) {
     e.preventDefault();
     setErro("");
 
+    if (dados.nome.trim().length < 2) {
+      setErro("Como a gente te chama?");
+      return;
+    }
     if (dados.whatsapp.replace(/\D/g, "").length < 10) {
       setErro("Confere o WhatsApp com DDD — é por ele que a gente chama.");
+      return;
+    }
+    const instagram = limparInstagram(dados.instagram);
+    if (instagram.length < 3) {
+      setErro("Coloca o @ do Instagram da agência.");
       return;
     }
 
     setEstado("enviando");
     try {
-      await enviarLead(dados);
-      marcarConversao({ tamanho_empresa: dados.pessoas, cargo: dados.cargo, ferramenta_atual: dados.ferramenta });
+      await enviarLead({ ...dados, instagram, consentimento: true });
+      marcarConversao({ cargo: dados.cargo, faturamento: dados.faturamento });
       setEstado("pronto");
     } catch {
       setEstado("erro");
@@ -50,8 +102,10 @@ export default function FormularioLead({ idTitulo, fechar }) {
     }
   }
 
+  const escolha = F.passos[passo];
+
   return (
-    <div className="form">
+    <div className="form form--passos">
       {fechar && (
         <button type="button" className="form__fechar" onClick={fechar} aria-label="Fechar">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
@@ -59,140 +113,148 @@ export default function FormularioLead({ idTitulo, fechar }) {
           </svg>
         </button>
       )}
+
       {estado === "pronto" ? (
         <div className="form__ok">
-          <h3 id={idTitulo}>{FECHAMENTO.form.sucesso.titulo}</h3>
-          <p>{FECHAMENTO.form.sucesso.texto}</p>
+          <h3 id={idTitulo}>{F.sucesso.titulo}</h3>
+          <p>{F.sucesso.texto}</p>
           {/* PENDENTE (P6): embutir a agenda aqui. */}
         </div>
       ) : (
-        <form onSubmit={aoEnviar} noValidate>
-          <h3 id={idTitulo} style={{ fontSize: "1.4rem" }}>{FECHAMENTO.form.titulo}</h3>
-          <p
-            style={{
-              color: "var(--cinza-fraco)",
-              fontSize: "0.87rem",
-              margin: "8px 0 24px",
-            }}
-          >
-            {FECHAMENTO.form.subtitulo}
+        <>
+          <h3 id={idTitulo} className="passos__titulo">
+            {F.titulo.map((p, i) =>
+              p.realce ? (
+                <span className="realce" key={i}>
+                  {p.t}
+                </span>
+              ) : (
+                <span key={i}>{p.t}</span>
+              )
+            )}
+          </h3>
+          <p className="passos__sub">{F.subtitulo}</p>
+
+          <div className="passos__trilho" aria-hidden="true">
+            <span style={{ transform: `scaleX(${(passo + 1) / TOTAL})` }} />
+          </div>
+          <ol className="passos__marcos" aria-hidden="true">
+            {Array.from({ length: TOTAL }, (_, i) => (
+              <li key={i} data-estado={i < passo ? "feito" : i === passo ? "atual" : "depois"}>
+                {i < passo ? (
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 8.5l3.2 3.2L13 5" />
+                  </svg>
+                ) : (
+                  i + 1
+                )}
+              </li>
+            ))}
+          </ol>
+          <p className="passos__contador">
+            Passo {passo + 1} de {TOTAL}
           </p>
 
-          <div className="form__campo">
-            <label htmlFor={id("nome")}>Seu nome</label>
-            <input
-              id={id("nome")}
-              autoComplete="name"
-              required
-              placeholder="Como te chamam"
-              value={dados.nome}
-              onChange={(e) => mudar("nome", e.target.value)}
-            />
+          <div className="passos__miolo" ref={miolo} key={passo}>
+            {escolha ? (
+              <fieldset className="passos__pergunta">
+                <legend>{escolha.pergunta}</legend>
+                <p className="passos__ajuda">{escolha.ajuda}</p>
+
+                <div className="passos__opcoes">
+                  {escolha.opcoes.map((o) => (
+                    <label className="opcao" key={o.valor}>
+                      <input
+                        type="radio"
+                        name={id(escolha.campo)}
+                        value={o.valor}
+                        checked={dados[escolha.campo] === o.valor}
+                        onChange={() => escolher(escolha.campo, o.valor)}
+                        // clicar de novo na já marcada também avança
+                        onClick={() => dados[escolha.campo] === o.valor && escolher(escolha.campo, o.valor)}
+                      />
+                      <span className="opcao__bolinha" />
+                      {o.rotulo}
+                    </label>
+                  ))}
+                </div>
+
+                {passo > 0 && (
+                  <button type="button" className="passos__voltar-link" onClick={voltar}>
+                    ← {F.voltar}
+                  </button>
+                )}
+              </fieldset>
+            ) : (
+              <form onSubmit={aoEnviar} noValidate>
+                <p className="passos__pergunta-titulo">{F.contato.pergunta}</p>
+                <p className="passos__ajuda">{F.contato.ajuda}</p>
+
+                <div className="form__campo">
+                  <label htmlFor={id("nome")}>Seu nome</label>
+                  <input
+                    id={id("nome")}
+                    autoComplete="name"
+                    required
+                    placeholder="Como te chamam"
+                    value={dados.nome}
+                    onChange={(e) => mudar("nome", e.target.value)}
+                  />
+                </div>
+
+                <div className="form__campo">
+                  <label htmlFor={id("whatsapp")}>WhatsApp</label>
+                  <input
+                    id={id("whatsapp")}
+                    type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
+                    required
+                    placeholder="(11) 90000-0000"
+                    value={dados.whatsapp}
+                    onChange={(e) => mudar("whatsapp", mascararWhatsapp(e.target.value))}
+                  />
+                </div>
+
+                <div className="form__campo">
+                  <label htmlFor={id("instagram")}>@ do Instagram da agência</label>
+                  <input
+                    id={id("instagram")}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    required
+                    placeholder="@suaagencia"
+                    value={dados.instagram}
+                    onChange={(e) => mudar("instagram", e.target.value)}
+                  />
+                </div>
+
+                <p className="passos__consent">
+                  {F.consentimento} <a href="#">{F.politica}</a>.
+                </p>
+
+                <div className="passos__botoes">
+                  <button type="button" className="passos__voltar" onClick={voltar}>
+                    {F.voltar}
+                  </button>
+                  <button type="submit" className="btn-cheio form__enviar" disabled={estado === "enviando"}>
+                    {estado === "enviando" ? "Enviando…" : F.botao}
+                    <Seta />
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
 
-          <div className="form__dupla">
-            <div className="form__campo">
-              <label htmlFor={id("whatsapp")}>WhatsApp</label>
-              <input
-                id={id("whatsapp")}
-                type="tel"
-                inputMode="numeric"
-                autoComplete="tel"
-                required
-                placeholder="(11) 90000-0000"
-                value={dados.whatsapp}
-                onChange={(e) => mudar("whatsapp", mascararWhatsapp(e.target.value))}
-              />
-            </div>
+          {erro && (
+            <p className="form__erro" role="alert">
+              {erro}
+            </p>
+          )}
 
-            <div className="form__campo">
-              <label htmlFor={id("email")}>E-mail</label>
-              <input
-                id={id("email")}
-                type="email"
-                autoComplete="email"
-                required
-                placeholder="voce@suaagencia.com.br"
-                value={dados.email}
-                onChange={(e) => mudar("email", e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Tamanho do time e cargo qualificam antes do contato e valem o atrito. */}
-          <div className="form__dupla">
-            <div className="form__campo">
-              <label htmlFor={id("pessoas")}>Pessoas na empresa</label>
-              <select
-                id={id("pessoas")}
-                required
-                value={dados.pessoas}
-                onChange={(e) => mudar("pessoas", e.target.value)}
-              >
-                <option value="">Quantas pessoas?</option>
-                <option value="so-eu">Só eu</option>
-                <option value="2-5">2 a 5</option>
-                <option value="6-10">6 a 10</option>
-                <option value="11-20">11 a 20</option>
-                <option value="21-50">21 a 50</option>
-                <option value="mais-50">Mais de 50</option>
-              </select>
-            </div>
-
-            <div className="form__campo">
-              <label htmlFor={id("cargo")}>Seu cargo na empresa</label>
-              <select
-                id={id("cargo")}
-                required
-                value={dados.cargo}
-                onChange={(e) => mudar("cargo", e.target.value)}
-              >
-                <option value="">Escolha o cargo</option>
-                <option value="dono-socio">Dono ou sócio</option>
-                <option value="diretor-gerente">Diretor ou gerente</option>
-                <option value="gestor-trafego">Gestor de tráfego</option>
-                <option value="comercial">Comercial</option>
-                <option value="desenvolvedor">Desenvolvedor</option>
-                <option value="atendimento">Atendimento / CS</option>
-                <option value="outro">Outro</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="form__campo">
-            <label htmlFor={id("ferramenta")}>Qual ferramenta você usa hoje</label>
-            <input
-              id={id("ferramenta")}
-              required
-              placeholder="Planilha, ClickUp, Reportei, mLabs…"
-              value={dados.ferramenta}
-              onChange={(e) => mudar("ferramenta", e.target.value)}
-            />
-          </div>
-
-          <label className="form__consent">
-            <input
-              type="checkbox"
-              required
-              checked={dados.consentimento}
-              onChange={(e) => mudar("consentimento", e.target.checked)}
-            />
-            <span>
-              {FECHAMENTO.form.consentimento} <a href="#">{FECHAMENTO.form.politica}</a>.
-            </span>
-          </label>
-
-          <button
-            type="submit"
-            className="btn-cheio form__enviar"
-            disabled={estado === "enviando"}
-          >
-            {estado === "enviando" ? "Enviando…" : FECHAMENTO.form.botao}
-            <Seta />
-          </button>
-
-          {erro && <p className="form__erro">{erro}</p>}
-        </form>
+          <p className="passos__seguro">{F.seguro}</p>
+        </>
       )}
     </div>
   );
