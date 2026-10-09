@@ -9,7 +9,8 @@ const TOTAL = F.passos.length + 1; // perguntas de escolha + a tela de contato
 
 const VAZIO = {
   cargo: "",
-  clientes: "",
+  faturamento: "",
+  pessoas: "",
   nome: "",
   whatsapp: "",
   instagram: "",
@@ -27,8 +28,9 @@ function limparInstagram(valor) {
 
 /**
  * Formulário do lead em passos, uma pergunta por vez — o mesmo formato do
- * assessorialure.com. Função e clientes ativos são cartões que avançam sozinhos no
- * clique; nome, WhatsApp e Instagram ficam juntos na última tela.
+ * assessorialure.com. Função, faturamento e tamanho do time são cartões que
+ * avançam sozinhos no clique; nome, WhatsApp e Instagram ficam juntos na
+ * última tela.
  */
 export default function FormularioLead({ idTitulo, fechar }) {
   const base = useId();
@@ -94,7 +96,7 @@ export default function FormularioLead({ idTitulo, fechar }) {
     setEstado("enviando");
     try {
       await enviarLead({ ...dados, instagram, consentimento: true });
-      marcarConversao({ cargo: dados.cargo, clientes: dados.clientes });
+      marcarConversao({ cargo: dados.cargo, faturamento: dados.faturamento, pessoas: dados.pessoas });
       setEstado("pronto");
     } catch {
       setEstado("erro");

@@ -289,7 +289,7 @@ export const FAQ = [
 export const FECHAMENTO = {
   form: {
     titulo: [
-      { t: "Você está a 3 passos de colocar " },
+      { t: "Você está a 4 passos de colocar " },
       { t: "o Lure GPT", realce: true },
       { t: " na sua agência" },
     ],
@@ -306,15 +306,29 @@ export const FECHAMENTO = {
         ],
       },
       {
-        campo: "clientes",
-        pergunta: "Quantos clientes ativos a sua agência tem?",
+        campo: "faturamento",
+        pergunta: "Qual o faturamento da agência?",
         ajuda: "Pra indicar o plano certo para o tamanho da sua operação.",
         opcoes: [
-          { valor: "20-50", rotulo: "20 a 50" },
-          { valor: "50-100", rotulo: "50 a 100" },
-          { valor: "150-200", rotulo: "150 a 200" },
-          { valor: "250-300", rotulo: "250 a 300" },
-          { valor: "mais-300", rotulo: "Mais de 300 clientes ativos" },
+          { valor: "0-20k", rotulo: "0 a 20.000/mês" },
+          { valor: "20-40k", rotulo: "20.000 a 40.000/mês" },
+          { valor: "40-60k", rotulo: "40.000 a 60.000/mês" },
+          { valor: "60-100k", rotulo: "60.000 a 100.000/mês" },
+          { valor: "100-150k", rotulo: "100.000 a 150.000/mês" },
+          { valor: "150-200k", rotulo: "150.000 a 200.000/mês" },
+          { valor: "200k+", rotulo: "Acima de 200.000/mês" },
+        ],
+      },
+      {
+        campo: "pessoas",
+        pergunta: "Qual o tamanho do seu time?",
+        ajuda: "Quantas pessoas trabalham na sua operação hoje.",
+        opcoes: [
+          { valor: "5-10", rotulo: "5 a 10 pessoas" },
+          { valor: "10-20", rotulo: "10 a 20 pessoas" },
+          { valor: "20-50", rotulo: "20 a 50 pessoas" },
+          { valor: "50-100", rotulo: "50 a 100 pessoas" },
+          { valor: "mais-100", rotulo: "Mais de 100 pessoas" },
         ],
       },
     ],
