@@ -145,7 +145,7 @@ Nada disto pode ir ao ar como está:
 - **P4 — número de operação real.** O terceiro número do hero está com o selo
   "a definir". Confirmar o que pode ser publicado (clientes ativos, peças/mês ou
   verba sob gestão) e preencher em `HERO.numeros`.
-- **P6 — destino do lead.** Definir `VITE_ENDPOINT_LEAD` num `.env`. Sem isso o
+- **P6 — destino do lead.** Definir `VITE_WEBHOOK_LEAD` num `.env`. Sem isso o
   formulário funciona, mostra a tela de sucesso e **não entrega o lead em lugar
   nenhum** — só avisa no console. O ideal do briefing é a própria página oferecer
   o horário: plugar a agenda no lugar marcado em `Fechamento.jsx`.
@@ -163,7 +163,7 @@ Nada disto pode ir ao ar como está:
 
 ```bash
 # .env
-VITE_ENDPOINT_LEAD=https://seu-n8n/webhook/lead-lp
+VITE_WEBHOOK_LEAD=https://seu-n8n/webhook/lead-lp
 ```
 
 ## Decisões que o código já respeita

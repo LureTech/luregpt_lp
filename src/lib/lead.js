@@ -5,13 +5,15 @@ import { lerOrigem } from "./tracking.js";
  *
  * Fica escrito aqui como padrão porque a URL acaba no JavaScript público da
  * página de qualquer jeito (variáveis VITE_ são embutidas no build) — não é
- * segredo. A variável VITE_ENDPOINT_LEAD, se existir na hospedagem, substitui.
- * Antes dependia só dela, e o deploy na Vercel subiu sem: o formulário
- * mostrava "Recebido!" e o lead não ia para lugar nenhum.
+ * segredo. A variável VITE_WEBHOOK_LEAD, se existir na hospedagem, substitui.
+ *
+ * O nome antigo, VITE_ENDPOINT_LEAD, ficou de fora de propósito: na Vercel
+ * ele ainda aponta para o webhook GET antigo e a conta que publica não pode
+ * editar variável de produção. Lendo ele, o POST iria para o webhook velho.
  */
 const ENDPOINT_PADRAO =
   "https://webhook.deverascompany.com.br/webhook/9377a626-eb59-4b13-ba09-a6e7a20b8b82";
-const ENDPOINT_LEAD = import.meta.env.VITE_ENDPOINT_LEAD || ENDPOINT_PADRAO;
+const ENDPOINT_LEAD = import.meta.env.VITE_WEBHOOK_LEAD || ENDPOINT_PADRAO;
 
 export async function enviarLead(dados) {
   // UTMs (utm_source, utm_campaign…) viram campos soltos, para o n8n ler direto
