@@ -10,7 +10,7 @@ import { lerOrigem } from "./tracking.js";
  * mostrava "Recebido!" e o lead não ia para lugar nenhum.
  */
 const ENDPOINT_PADRAO =
-  "https://webhook.deverascompany.com.br/webhook/55c39762-14a0-4af9-a861-c90903a83a63";
+  "https://webhook.deverascompany.com.br/webhook/9377a626-eb59-4b13-ba09-a6e7a20b8b82";
 const ENDPOINT_LEAD = import.meta.env.VITE_ENDPOINT_LEAD || ENDPOINT_PADRAO;
 
 export async function enviarLead(dados) {
