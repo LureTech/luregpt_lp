@@ -27,17 +27,16 @@ export async function enviarLead(dados) {
   // "Recebido!" falso com o lead perdido
   if (!ENDPOINT_LEAD) throw new Error("Destino do lead não configurado");
 
-  // O webhook do n8n está configurado como GET: os campos vão na query
-  // string e o n8n lê cada um em `query`. Em modo no-cors porque o webhook
-  // não devolve cabeçalhos de CORS — a resposta fica opaca, só dá para
-  // saber se a rede falhou. Se o nó passar para POST, trocar aqui.
-  const corpo = new URLSearchParams();
-  for (const [chave, valor] of Object.entries(carga)) {
-    corpo.append(chave, typeof valor === "object" ? JSON.stringify(valor) : String(valor ?? ""));
-  }
-  const url = `${ENDPOINT_LEAD}${ENDPOINT_LEAD.includes("?") ? "&" : "?"}${corpo}`;
-
-  await fetch(url, { method: "GET", mode: "no-cors" });
+  // O webhook do n8n é POST e libera CORS: os campos vão como JSON e o n8n
+  // lê cada um em `body`. Com CORS a resposta é legível, então dá para saber
+  // se o n8n recebeu de verdade — se não recebeu, a pessoa vê o erro em vez
+  // de um "Recebido!" falso.
+  const resposta = await fetch(ENDPOINT_LEAD, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(carga),
+  });
+  if (!resposta.ok) throw new Error(`Webhook respondeu ${resposta.status}`);
   return { ok: true };
 }
 
