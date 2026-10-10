@@ -1,0 +1,238 @@
+/* ==========================================================================
+   Página de obrigado (/obrigado)
+   Mesmo fundo escuro e azul da LP, numa tela só.
+   ========================================================================== */
+.obrigado {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* luz azul atrás do check e malha bem apagada */
+.obrigado__brilho {
+  position: absolute;
+  z-index: -1;
+  top: -260px;
+  left: 50%;
+  width: min(1100px, 160vw);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(61 123 249 / 0.22), rgb(61 123 249 / 0.06) 55%, transparent 75%);
+  pointer-events: none;
+}
+.obrigado__grade {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(70% 60% at 50% 20%, #000, transparent);
+  pointer-events: none;
+}
+
+.obrigado__topo {
+  padding-block: 22px;
+}
+.obrigado__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--branco);
+}
+.obrigado__marca b {
+  font-weight: 600;
+  color: var(--azul);
+}
+
+.obrigado__miolo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 680px;
+  padding-block: clamp(28px, 7vh, 72px) 48px;
+  text-align: center;
+}
+
+/* check que se desenha */
+.obrigado__check {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--azul), var(--azul-escuro));
+  color: #fff;
+  box-shadow:
+    0 0 0 1px rgb(138 180 255 / 0.4) inset,
+    0 0 0 10px rgb(61 123 249 / 0.1),
+    0 0 60px rgb(61 123 249 / 0.55);
+  animation: obrigado-surge 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.obrigado__check-traco {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: obrigado-traco 0.45s 0.35s ease-out forwards;
+}
+@keyframes obrigado-surge {
+  from { opacity: 0; transform: scale(0.6); }
+}
+@keyframes obrigado-traco {
+  to { stroke-dashoffset: 0; }
+}
+
+.obrigado__selo {
+  margin-top: 26px;
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--azul-claro);
+}
+.obrigado__titulo {
+  margin-top: 14px;
+  font-family: var(--display);
+  font-size: clamp(2rem, 5.2vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--branco);
+}
+/* a parte azul começa em linha própria: sem isso o "O" ficava órfão */
+.obrigado__titulo .realce {
+  display: block;
+}
+.obrigado__sub {
+  max-width: 52ch;
+  margin-top: 18px;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--cinza);
+}
+
+/* próximos passos */
+.obrigado__passos {
+  width: 100%;
+  margin-top: 40px;
+  padding: clamp(22px, 4vw, 30px);
+  border: 1px solid rgb(255 255 255 / 0.09);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #131822, #0a0d14);
+  box-shadow: 0 30px 70px -40px rgb(0 0 0 / 0.9);
+  text-align: left;
+}
+.obrigado__passos h2 {
+  font-family: var(--corpo);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cinza-fraco);
+}
+.obrigado__passos ol {
+  display: grid;
+  gap: 0;
+  margin-top: 16px;
+  padding: 0;
+  list-style: none;
+}
+.obrigado__passos li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+.obrigado__passos li:last-child {
+  padding-bottom: 0;
+}
+/* linha ligando os números */
+.obrigado__passos li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 36px;
+  bottom: 4px;
+  left: 16.5px;
+  width: 1px;
+  background: linear-gradient(var(--azul), rgb(61 123 249 / 0.1));
+}
+.obrigado__numero {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--azul);
+  background: rgb(61 123 249 / 0.12);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--branco);
+}
+.obrigado__passos li:first-child .obrigado__numero {
+  background: var(--azul);
+  box-shadow: 0 0 0 4px rgb(61 123 249 / 0.18);
+}
+.obrigado__passos strong {
+  display: block;
+  padding-top: 5px;
+  font-family: var(--display);
+  font-size: 1.04rem;
+  font-weight: 600;
+  color: var(--branco);
+}
+.obrigado__passos p {
+  margin-top: 4px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--cinza-fraco);
+}
+
+.obrigado__voltar {
+  margin-top: 32px;
+}
+
+.obrigado__rodape {
+  padding: 22px var(--gutter) 28px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--cinza-apagado);
+}
+
+/* entrada em cascata, sem depender do GSAP da LP */
+.obrigado__selo,
+.obrigado__titulo,
+.obrigado__sub,
+.obrigado__passos,
+.obrigado__voltar {
+  animation: obrigado-sobe 0.6s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.obrigado__selo { animation-delay: 0.15s; }
+.obrigado__titulo { animation-delay: 0.22s; }
+.obrigado__sub { animation-delay: 0.3s; }
+.obrigado__passos { animation-delay: 0.4s; }
+.obrigado__voltar { animation-delay: 0.5s; }
+@keyframes obrigado-sobe {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+@media (max-width: 560px) {
+  .obrigado__voltar {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .obrigado *,
+  .obrigado__check-traco {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+}

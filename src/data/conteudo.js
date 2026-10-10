@@ -348,6 +348,31 @@ export const FECHAMENTO = {
   },
 };
 
+/* ---------- página de obrigado (/obrigado) ---------- */
+export const OBRIGADO = {
+  selo: "Cadastro recebido",
+  // {nome} vira o primeiro nome de quem preencheu; sem nome, vale o "semNome"
+  titulo: [{ t: "Valeu, {nome}! " }, { t: "O comercial já vai te chamar.", realce: true }],
+  tituloSemNome: [{ t: "Recebido! " }, { t: "O comercial já vai te chamar.", realce: true }],
+  sub: "Em até 5 minutos chega uma mensagem no WhatsApp que você deixou, pra colocar o Lure GPT pra rodar na sua agência.",
+  passosTitulo: "O que acontece agora",
+  passos: [
+    {
+      titulo: "O comercial te chama no WhatsApp",
+      texto: "Em até 5 minutos, no número que você informou. Fica de olho nas mensagens.",
+    },
+    {
+      titulo: "Uma conversa sobre a sua operação",
+      texto: "Ele já sabe a sua função, o faturamento e o tamanho do time. A conversa vai direto ao ponto.",
+    },
+    {
+      titulo: "Acesso liberado",
+      texto: "A conta da sua agência fica de pé no mesmo dia, com acompanhamento na primeira semana.",
+    },
+  ],
+  voltar: "Voltar para o site",
+};
+
 export const MARQUEE = [
   "Manda um áudio. A campanha sobe.",
   "Cola o link. A página volta clonada.",

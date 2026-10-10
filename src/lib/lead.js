@@ -15,6 +15,10 @@ const ENDPOINT_PADRAO =
   "https://webhook.deverascompany.com.br/webhook/9377a626-eb59-4b13-ba09-a6e7a20b8b82";
 const ENDPOINT_LEAD = import.meta.env.VITE_WEBHOOK_LEAD || ENDPOINT_PADRAO;
 
+/** Onde o formulário deixa o nome para a página de obrigado cumprimentar. */
+export const CHAVE_NOME = "lure_lead_nome";
+export const PAGINA_OBRIGADO = "/obrigado/";
+
 export async function enviarLead(dados) {
   // UTMs (utm_source, utm_campaign…) viram campos soltos, para o n8n ler direto
   const carga = {
