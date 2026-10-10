@@ -51,8 +51,8 @@ export function lerOrigem() {
 }
 
 /**
- * Dispara a conversão no GA4 e no Pixel.
- * Os scripts estão comentados no index.html — enquanto não subirem os IDs,
+ * Dispara a conversão no GA4 no envio do formulário.
+ * O script do GA4 está comentado no index.html — enquanto não subir o ID,
  * isto não faz nada e não quebra nada.
  */
 export function marcarConversao(dados = {}) {
@@ -66,10 +66,37 @@ export function marcarConversao(dados = {}) {
     });
   }
 
-  if (typeof window.fbq === "function") {
-    window.fbq("track", "Lead", { content_name: "Lure GPT" });
-  }
+  // O Lead do Pixel da Meta não sai daqui: ele dispara na página de obrigado
+  // (marcarLeadObrigado), para a conversão ficar presa à URL /obrigado.
 
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: "lead_demo_lure_gpt", ...dados });
+}
+
+/** Marca que o formulário acabou de ser enviado, para a /obrigado contar o lead. */
+const CHAVE_ENVIADO = "lure_lead_enviado";
+export function marcarEnvio() {
+  try {
+    sessionStorage.setItem(CHAVE_ENVIADO, "1");
+  } catch {
+    // storage bloqueado: a /obrigado abre, só não conta o lead no Pixel
+  }
+}
+
+/**
+ * Lead do Pixel da Meta, chamado ao abrir a /obrigado.
+ * Só conta quem chegou vindo do envio: abrir a página direto ou recarregar
+ * não gera lead (a marca é apagada depois de usada).
+ */
+export function marcarLeadObrigado() {
+  if (typeof window === "undefined") return;
+  try {
+    if (!sessionStorage.getItem(CHAVE_ENVIADO)) return;
+    sessionStorage.removeItem(CHAVE_ENVIADO);
+  } catch {
+    return;
+  }
+  if (typeof window.fbq === "function") {
+    window.fbq("track", "Lead", { content_name: "Lure GPT" });
+  }
 }

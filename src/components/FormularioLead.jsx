@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Seta } from "./Icones.jsx";
 import { FECHAMENTO } from "../data/conteudo.js";
 import { CHAVE_NOME, PAGINA_OBRIGADO, enviarLead, mascararWhatsapp } from "../lib/lead.js";
-import { marcarConversao } from "../lib/tracking.js";
+import { marcarConversao, marcarEnvio } from "../lib/tracking.js";
 
 const F = FECHAMENTO.form;
 const TOTAL = F.passos.length + 1; // perguntas de escolha + a tela de contato
@@ -98,6 +98,7 @@ export default function FormularioLead({ idTitulo, fechar }) {
       await enviarLead({ ...dados, instagram, consentimento: true });
       marcarConversao({ cargo: dados.cargo, faturamento: dados.faturamento, pessoas: dados.pessoas });
       setEstado("pronto");
+      marcarEnvio();
       // leva para a página de obrigado; o nome vai pela sessão, não pela URL
       try {
         sessionStorage.setItem(CHAVE_NOME, dados.nome);
