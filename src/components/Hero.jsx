@@ -10,8 +10,11 @@ import { HERO } from "../data/conteudo.js";
  * notebook girando embaixo (o vídeo veio do próprio HTML de referência).
  *
  * Única H1 da página e única seção com vídeo em reprodução automática.
+ *
+ * As variações (/3, /4) podem trocar título e subtítulo (teste de copy) e
+ * passar `ctaUnico`: aí o hero mostra um botão só, maior, no lugar do par.
  */
-export default function Hero() {
+export default function Hero({ titulo = HERO.titulo, sub = HERO.sub, ctaUnico }) {
   return (
     <section className="hero" id="topo">
       <div className="arco" />
@@ -21,18 +24,27 @@ export default function Hero() {
         <div className="hero__texto-col">
           <p className="selo">{HERO.selo}</p>
 
-          <Titulo partes={HERO.titulo} nivel="h1" />
+          <Titulo partes={titulo} nivel="h1" />
 
-          <p className="sub">{HERO.sub}</p>
+          <p className="sub">{sub}</p>
 
           <div className="hero__acoes">
-            <a className="shiny-cta" href="#fechamento">
-              {HERO.cta}
-              <Seta />
-            </a>
-            <a className="btn-secundario" href="#fechamento">
-              {HERO.ctaRotulo}
-            </a>
+            {ctaUnico ? (
+              <a className="btn-cheio hero__cta-unico" href="#fechamento">
+                {ctaUnico}
+                <Seta />
+              </a>
+            ) : (
+              <>
+                <a className="shiny-cta" href="#fechamento">
+                  {HERO.cta}
+                  <Seta />
+                </a>
+                <a className="btn-secundario" href="#fechamento">
+                  {HERO.ctaRotulo}
+                </a>
+              </>
+            )}
           </div>
 
           <p className="hero__reforco">{HERO.reforco}</p>

@@ -9,6 +9,19 @@
  * e o rodapé só mostrarem o que existe na página. O hero entra em todas e
  * não está na lista; o plano também entra em todas.
  */
+/* Botão único do hero na /3 e na /4 (a LP principal mantém os dois). */
+export const CTA_ESPECIALISTA = "Falar com especialista";
+
+/* Copy da /3: mais curta, batendo na dor da folha de pagamento.
+   A /4 fica com a copy da LP principal, para comparar as duas. */
+export const HERO_V3 = {
+  titulo: [
+    { t: "Diminua sua folha", realce: true },
+    { t: " com uma IA que opera na sua agência de ponta a ponta." },
+  ],
+  sub: "A IA sobe campanha, edita vídeo, clona página e atende o CRM. Sua agência cresce sem inchar o time.",
+};
+
 export const VARIANTES = {
   // /1 — como funciona + as objeções (segurança e para quem é) + FAQ
   v1: ["ciclo", "seguranca", "para-quem", "plano"],
