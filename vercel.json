@@ -6,6 +6,7 @@
     { "source": "/obrigado", "destination": "/obrigado/index.html" },
     { "source": "/1", "destination": "/1/index.html" },
     { "source": "/2", "destination": "/2/index.html" },
-    { "source": "/3", "destination": "/3/index.html" }
+    { "source": "/3", "destination": "/3/index.html" },
+    { "source": "/4", "destination": "/4/index.html" }
   ]
 }

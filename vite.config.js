@@ -11,7 +11,7 @@ const barraFinal = {
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       const [caminho, busca = ''] = req.url.split('?')
-      if (/^\/(1|2|3|obrigado)$/.test(caminho)) {
+      if (/^\/(1|2|3|4|obrigado)$/.test(caminho)) {
         res.writeHead(301, { Location: `${caminho}/${busca ? `?${busca}` : ''}` })
         res.end()
         return
@@ -21,8 +21,8 @@ const barraFinal = {
   },
 }
 
-// A LP, a de obrigado (/obrigado), para onde o formulário leva, e as três
-// variações curtas da LP (/1, /2, /3 — ver src/data/variantes.js).
+// A LP, a de obrigado (/obrigado), para onde o formulário leva, e as
+// variações curtas da LP (/1, /2, /3, /4 — ver src/data/variantes.js).
 export default defineConfig({
   plugins: [react(), barraFinal],
   build: {
@@ -34,6 +34,7 @@ export default defineConfig({
         v1: pagina('./1/index.html'),
         v2: pagina('./2/index.html'),
         v3: pagina('./3/index.html'),
+        v4: pagina('./4/index.html'),
       },
     },
   },
