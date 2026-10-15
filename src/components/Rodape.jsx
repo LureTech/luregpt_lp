@@ -13,9 +13,11 @@ const PRODUTO = [
 /**
  * Rodapé enxuto: marca e duas colunas de links.
  * A chamada final fica só no formulário logo acima, sem repetir aqui.
+ * `secoes` (opcional): mesmo filtro do menu do topo, para as variações curtas.
  */
-export default function Rodape() {
+export default function Rodape({ secoes }) {
   const legais = RODAPE.links.filter((l) => l.href !== "#fechamento");
+  const produto = secoes ? PRODUTO.filter((l) => secoes.includes(l.href.slice(1))) : PRODUTO;
 
   return (
     <footer className="rodape">
@@ -43,7 +45,7 @@ export default function Rodape() {
 
           <nav className="rodape__coluna" aria-label="Produto">
             <p className="rodape__titulo">Produto</p>
-            {PRODUTO.map((l) => (
+            {produto.map((l) => (
               <a key={l.href} href={l.href}>
                 {l.texto}
               </a>

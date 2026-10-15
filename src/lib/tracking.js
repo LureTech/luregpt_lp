@@ -40,6 +40,16 @@ export function guardarOrigem() {
   }
 }
 
+/**
+ * Qual versão da página a pessoa está vendo: "original" na LP principal,
+ * "v1", "v2" ou "v3" nas variações curtas (vem do data-variante do <html>).
+ * Vai junto no lead e no evento do Pixel, para comparar a conversão.
+ */
+export function varianteAtual() {
+  if (typeof document === "undefined") return "original";
+  return document.documentElement.dataset.variante || "original";
+}
+
 /** Devolve a origem guardada, para ir junto no envio do formulário. */
 export function lerOrigem() {
   if (typeof window === "undefined") return {};
@@ -58,10 +68,13 @@ export function lerOrigem() {
 export function marcarConversao(dados = {}) {
   if (typeof window === "undefined") return;
 
+  const variante = varianteAtual();
+
   if (typeof window.gtag === "function") {
     window.gtag("event", "generate_lead", {
       event_category: "produto",
       event_label: "formulario_lp",
+      variante,
       ...dados,
     });
   }
@@ -70,14 +83,18 @@ export function marcarConversao(dados = {}) {
   // (marcarLeadObrigado), para a conversão ficar presa à URL /obrigado.
 
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: "lead_demo_lure_gpt", ...dados });
+  window.dataLayer.push({ event: "lead_demo_lure_gpt", variante, ...dados });
 }
 
-/** Marca que o formulário acabou de ser enviado, para a /obrigado contar o lead. */
+/**
+ * Marca que o formulário acabou de ser enviado, para a /obrigado contar o
+ * lead. Guarda a variação que converteu, e não só um "1": a /obrigado é a
+ * mesma para todas, então é daqui que o Pixel sabe de onde o lead veio.
+ */
 const CHAVE_ENVIADO = "lure_lead_enviado";
 export function marcarEnvio() {
   try {
-    sessionStorage.setItem(CHAVE_ENVIADO, "1");
+    sessionStorage.setItem(CHAVE_ENVIADO, varianteAtual());
   } catch {
     // storage bloqueado: a /obrigado abre, só não conta o lead no Pixel
   }
@@ -90,13 +107,17 @@ export function marcarEnvio() {
  */
 export function marcarLeadObrigado() {
   if (typeof window === "undefined") return;
+  let variante;
   try {
-    if (!sessionStorage.getItem(CHAVE_ENVIADO)) return;
+    variante = sessionStorage.getItem(CHAVE_ENVIADO);
+    if (!variante) return;
     sessionStorage.removeItem(CHAVE_ENVIADO);
   } catch {
     return;
   }
+  // "1" é a marca antiga, de antes das variações: veio da LP principal
+  if (variante === "1") variante = "original";
   if (typeof window.fbq === "function") {
-    window.fbq("track", "Lead", { content_name: "Lure GPT" });
+    window.fbq("track", "Lead", { content_name: "Lure GPT", content_category: variante });
   }
 }

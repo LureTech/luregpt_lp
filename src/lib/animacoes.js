@@ -268,7 +268,9 @@ export function iniciarAnimacoes() {
     // de cima para baixo (clip-path, sem tocar no transform do .mock, que o
     // CSS já usa para a inclinação). Antes eram dois gatilhos separados e os
     // itens apareciam fora de ordem, aos pulos.
-    {
+    // (as variações curtas /1, /2, /3 não têm todas as seções: sem a seção,
+    // a sequência não é montada, como já faz o `entrar`)
+    if (document.querySelector(".trio")) {
       const trio = gsap.timeline({
         scrollTrigger: { trigger: ".trio", start: "top 80%", once: true },
       });
@@ -354,7 +356,7 @@ export function iniciarAnimacoes() {
 
     // segurança: o painel entra de lado e conta a história em ordem —
     // campanha pausada, pedido de confirmação, depois a trilha
-    {
+    if (document.querySelector(".cofre")) {
       const painel = gsap.timeline({
         scrollTrigger: { trigger: ".cofre", start: "top 78%", once: true },
       });
@@ -383,7 +385,7 @@ export function iniciarAnimacoes() {
     // Depois que as colunas chegam, os itens entram um por um: primeiro a
     // coluna "sim" inteira, depois a "não". Cada marca salta no lugar logo
     // antes do texto dela.
-    {
+    if (document.querySelector(".honestas")) {
       const linha = gsap.timeline({
         delay: 0.55,
         scrollTrigger: { trigger: ".honestas", start: "top 78%", once: true },

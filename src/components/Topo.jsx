@@ -14,8 +14,13 @@ const LINKS = [
 /**
  * Cápsula fixa no topo. Ao rolar ela encolhe, e o link da seção que está na
  * tela ganha uma pílula de destaque.
+ *
+ * `secoes` (opcional) limita o menu às seções que existem na página — as
+ * variações curtas (/1, /2, /3) não têm todas, e link para seção ausente
+ * não leva a lugar nenhum.
  */
-export default function Topo() {
+export default function Topo({ secoes }) {
+  const links = secoes ? LINKS.filter((l) => secoes.includes(l.id)) : LINKS;
   const [rolou, setRolou] = useState(false);
   const [ativa, setAtiva] = useState("");
 
@@ -55,7 +60,7 @@ export default function Topo() {
         </a>
 
         <nav className="cabecalho__nav">
-          {LINKS.map((l) => (
+          {links.map((l) => (
             <a key={l.id} href={`#${l.id}`} className={ativa === l.id ? "ativo" : undefined}>
               {l.rotulo}
             </a>

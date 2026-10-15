@@ -1,4 +1,4 @@
-import { lerOrigem } from "./tracking.js";
+import { lerOrigem, varianteAtual } from "./tracking.js";
 
 /**
  * Destino do lead: webhook do n8n.
@@ -26,6 +26,7 @@ export async function enviarLead(dados) {
     consentimento: dados.consentimento ? "sim" : "nao",
     ...lerOrigem(),
     pagina: window.location.href,
+    variante: varianteAtual(),
     enviadoEm: new Date().toISOString(),
   };
 
