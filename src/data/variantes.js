@@ -16,8 +16,8 @@ export const CTA_ESPECIALISTA = "Falar com especialista";
    A /4 fica com a copy da LP principal, para comparar as duas. */
 export const HERO_V3 = {
   titulo: [
-    { t: "Diminua sua folha", realce: true },
-    { t: " com uma IA que opera na sua agência de ponta a ponta." },
+    { t: "Diminua sua folha em até 40%", realce: true },
+    { t: " com uma IA que opera a sua agência." },
   ],
   sub: "A IA sobe campanha, edita vídeo, clona página e atende o CRM. Sua agência cresce sem inchar o time.",
 };
